@@ -33,11 +33,58 @@ function createPlayer(name, marker) {
     return { getName, setName, getMarker, setMarker, getScore, giveScore };
 };
 
+const DisplayController = (() => {
+  const cells = Array.from(document.querySelectorAll(".cell"));
+  const message = document.querySelector(".message");
+  const p1score = document.querySelector(".p1score");
+  const p2score = document.querySelector(".p2score");
+  const resetBtn = document.querySelector(".resetBtn");
+    resetBtn.addEventListener("click", function(e) {
+        GameBoard.reset();
+        GameController.reset();
+        render();
+    });
+
+  const render = () => {
+    const board = GameBoard.getBoard();
+    cells.forEach((cell, index) => {
+      cell.textContent = board[index];
+    });
+  };
+
+  const displayTurn = (player) => {
+    message.textContent = `It's ${player.getName()}'s Turn!`;
+  };
+
+  const displayWinner = (player) => {
+    message.textContent = `${player.getName()} Wins!`;
+  };
+
+  const displayTie = () => {
+    message.textContent = "It's a Tie!";
+  };
+
+  const displayScore = (player1, player2) => {
+    p1score.textContent = `${player1.getName()}: ${player1.getScore()}`;
+    p2score.textContent = `${player2.getName()}: ${player2.getScore()}`;
+  };
+
+  cells.forEach((cell, index) => {
+    cell.addEventListener("click", function(e) {
+      GameController.playRound(index);
+      render();
+    });
+  });
+
+  return { render, displayWinner, displayTurn, displayTie, displayScore };
+})();
+
 const GameController = (() => {
     const player1 = createPlayer("Player1", 'X');
     const player2 = createPlayer("Player2", 'O');
     let currentPlayer = player1;
     let gameOver = false;
+    DisplayController.displayScore(player1, player2);
 
     const playRound = (index) => {
         if (gameOver) return;
@@ -49,6 +96,7 @@ const GameController = (() => {
             DisplayController.displayWinner(currentPlayer);
             currentPlayer.giveScore();
             gameOver = true;
+            DisplayController.displayScore(player1, player2);
             return;
         }
 
@@ -90,44 +138,3 @@ const GameController = (() => {
 
     return { playRound, reset };
 })();
-
-const DisplayController = (() => {
-  const cells = Array.from(document.querySelectorAll(".cell"));
-  const message = document.querySelector(".message");
-  const resetBtn = document.querySelector(".resetBtn");
-    resetBtn.addEventListener("click", function(e) {
-        GameBoard.reset();
-        GameController.reset();
-        render();
-    });
-
-  const render = () => {
-    const board = GameBoard.getBoard();
-    cells.forEach((cell, index) => {
-      cell.textContent = board[index];
-    });
-  };
-
-  const displayTurn = (player) => {
-    message.textContent = `It's ${player.getName()}'s Turn!`;
-  }
-
-  const displayWinner = (player) => {
-    message.textContent = `${player.getName()} Wins!`;
-  }
-
-  const displayTie = () => {
-    message.textContent = "It's a Tie!";
-  }
-
-  cells.forEach((cell, index) => {
-    cell.addEventListener("click", function(e) {
-      GameController.playRound(index);
-      render();
-    });
-  });
-
-  return { render, displayWinner, displayTurn, displayTie };
-})();
-
-
