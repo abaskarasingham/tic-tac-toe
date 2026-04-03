@@ -8,7 +8,7 @@
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <h1 class="message">It's Player1's Turn!</h1>
+    <h1 class="message">Welcome To Tic-Tac-Toe!</h1>
     <div class="game-board">
         <div class="cell"></div>
         <div class="cell"></div>
@@ -21,9 +21,30 @@
         <div class="cell"></div>
     </div>
     <div class="bottom-row">
-        <div class="p1score">Player1: </div>
-        <button class="resetBtn">Reset</button>
-        <div class="p2score">Player2: </div>
+        <div class="p1score">Player 1</div>
+        <button class="startBtn" command="show-modal" commandfor="game-dialog">New Game</button>
+        <button class="resetBtn">Restart Game</button>
+        <div class="p2score">Player 2</div>
     </div>
+
+    <dialog id="game-dialog" closedby="any">
+        <p>Enter your player names down below!</p>
+    
+        <form action="" method="dialog">
+            <div class="form-group">
+                <label for="player1">Player 1 (X):</label>
+                <input type="text" id="player1" name="player1" required maxlength="20">
+            </div>
+    
+            <div class="form-group">
+                <label for="player2">Player 2 (O):</label>
+                <input type="text" id="player2" name="player2" required maxlength="20">
+            </div>
+    
+            <button type="submit">Start Game</button>
+        </form>
+
+        <button commandfor="game-dialog" command="close">Cancel</button>
+    </dialog>
 </body>
 </html>
